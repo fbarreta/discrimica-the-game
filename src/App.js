@@ -5,13 +5,11 @@ import Players from './components/Players';
 
 function App() {
   return (
-    <div>
+    <>
       <Header />
       <hr/>
-      <div>
-        <Players />
-      </div>
-    </div>
+      <Players />
+    </>
   );
 }
 
