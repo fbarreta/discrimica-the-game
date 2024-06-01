@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import repInfo from './../../repositories/info';
+import { io } from 'socket.io-client';
 import './index.scss'
 import Player from '../Player';
 function Players() {
-    var names = ['Felipe', 'Lidiane', 'Gabriel', 'Maria Clara', 'Rodrigo', 'Ricardo', 'Thais'];
+    // var names = ['Felipe', 'Lidiane', 'Gabriel', 'Maria Clara', 'Rodrigo', 'Ricardo', 'Thais'];
+    const [players, setPlayers] = useState([]);
+    useEffect(
+        () => {
+        repInfo.getInfo().then((resp) => {
+            setPlayers(resp.players);
+            console.log(resp.players);
+        });
+        const URL = 'http://localhost:3001';
+        const socket = io(URL);
+        socket.connect();
+        socket.on('add-player', check);
+          
+        return () => {
+        socket.disconnect();
+        }
+        },
+        []
+      )
+
+    const check = (resp) => {
+        setPlayers(resp.players);
+    };
+
     return(
         <div>
             <div className="message">
@@ -12,8 +37,8 @@ function Players() {
             </div>
             <div>
                 <ul className="players">
-                    {names.map(function(name, index){
-                        return <Player key={ index }>{name}</Player>;
+                    {players.map(function(p, index){
+                        return <Player key={ index }>{p.name}</Player>;
                     })}
                 </ul>
             </div>
