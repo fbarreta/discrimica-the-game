@@ -10,7 +10,6 @@ function Players() {
         () => {
         repInfo.getInfo().then((resp) => {
             setPlayers(resp.players);
-            console.log(resp.players);
         });
         const URL = 'http://localhost:3001';
         const socket = io(URL);
@@ -38,7 +37,7 @@ function Players() {
             <div>
                 <ul className="players">
                     {players.map(function(p, index){
-                        return <Player key={ index }>{p.name}</Player>;
+                        return <Player key={ index } player={p} />;
                     })}
                 </ul>
             </div>

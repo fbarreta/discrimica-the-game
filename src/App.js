@@ -1,14 +1,11 @@
 import React from 'react';
 import './App.css';
-import Header from './components/Header';
-import Players from './components/Players';
+import Main from './components/Main';
 
 function App() {
   return (
     <>
-      <Header />
-      <hr/>
-      <Players />
+      <Main />
     </>
   );
 }

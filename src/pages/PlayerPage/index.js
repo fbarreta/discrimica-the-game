@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import Header from './../../components/Header';
-import FormField from './../../components/FormField';
-import useForm from './../../hooks/useForm';
 import repPlayer from './../../repositories/player';
 import repWord from './../../repositories/word';
-
+import './index.scss'
 function PlayerPage() {
     const { playerId } = useParams();
-    const defaultEmpty = {
-        name: ''
-    };
-    const defaultEmptyWord = {
-        description: ''
-    };
-    const history = useHistory();
-    const [player, setPlayer] = useState(defaultEmpty);
+    const [player, setPlayer] = useState();
     const [words, setWords] = useState([]);
-    const { handleChange, values, clearForm } = useForm(defaultEmpty);
+    const [name, setName] = useState('');
+    const [word, setWord] = useState('');
+    const history = useHistory();
 
     useEffect(() => {
         if (playerId) {
@@ -27,62 +20,53 @@ function PlayerPage() {
             });
         }
     }, [playerId]);
+
+    const joinPlayer = () => {
+        repPlayer.addPlayer(name).then((resp) => {
+            const id = resp.id;
+            history.push(`/player/${id}`)
+        });
+    };
+
+    const addWord = (description) => {
+        repWord.addWord(playerId, description).then((resp) => {
+            console.log(resp);
+            const newWords = [...words, resp];
+            setWords(newWords);
+        });
+    };
     
     return (
         <>
             <Header />
             <hr/>
             {!playerId && (
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    repPlayer.addPlayer(values.name).then((resp) => {
-                        clearForm(defaultEmptyWord);
-                        history.push(`/player/${resp.id}`); 
-                    });
-                }}>
-                    <FormField
-                        label='Name'
-                        type='text'
-                        name='name'
-                        value={values.name}
-                        onChange={handleChange}
-                    />
-                    <button>
-                        Join
-                    </button>
-                </form>
-            )}
-            
-            {playerId && (
                 <>
-                    <h1>{player.name}</h1>
-                    <form onSubmit={(e) => {
-                        e.preventDefault();
-                        repWord.addWord(playerId, values.description).then((resp) => {
-                            console.log(resp);
-                            clearForm(defaultEmpty);
-                            setWords([...words, resp]);
-                        });
-                    }}>
-                        <FormField
-                            label='Word'
-                            type='text'
-                            name='description'
-                            value={values.description}
-                            onChange={handleChange}
-                        />
-                        <button>
-                            Add Word
-                        </button>
-                    </form>
-                    Words
+                    <label id='name'>Name: </label>
+                    <input type='text' size={20} label='name' value={name} onChange={(e) => {
+                        setName(e.target.value);
+                    }}/>
+                    <button onClick={() => {
+                        joinPlayer();
+                    }}>Join</button>
+                </>
+            )}
+            {playerId && player && (
+                <>
+                    <p className='PlayerText'>{player.name}</p>
+                    <label id='word'>Word: </label>
+                    <input type='text' size={20} label='word' value={word} onChange={(e) => {
+                        setWord(e.target.value);
+                    }}/>
+                    <button onClick={() => {
+                        addWord(word);
+                    }}>Add</button>
+                    <br/>
                     <ul>
                     {
-                    words.map((word, index) => {
-                        return(
-                            <li key={index}>{word.description}</li>
-                        );
-                    })
+                        words.map((w, i) => {
+                            return <li key={i}>{w.description}</li>
+                        })
                     }
                     </ul>
                 </>
