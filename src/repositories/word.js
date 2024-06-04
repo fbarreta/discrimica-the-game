@@ -2,15 +2,27 @@
 import config from './../config';
 
 function addWord(playerId, word) {
-    return fetch(`${config.URL_API}/addWord/${playerId}`, {
+    return fetch(`${config.URL_API}/word/${playerId}`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
         },
-        body: `word=${word}`,
+        body: JSON.stringify(word),
     }).then(async (resp) => {
         return await resp.json();
     });
 }
 
-export default { addWord }
+function removeWord(playerId, word) {
+    return fetch(`${config.URL_API}/word/${playerId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(word),
+    }).then(async (resp) => {
+        return await resp.json();
+    });
+}
+
+export default { addWord, removeWord }
