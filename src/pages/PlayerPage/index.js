@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import Header from './../../components/Header';
 import repPlayer from './../../repositories/player';
+import repInfo from './../../repositories/info';
 import repWord from './../../repositories/word';
 import './index.scss'
 function PlayerPage() {
@@ -13,6 +14,7 @@ function PlayerPage() {
     const [name, setName] = useState('');
     const [word, setWord] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
+    const [match, setMatch] = useState({id: null, started: false});
     const history = useHistory();
 
     const checkEnabled = useCallback(() => {
@@ -22,6 +24,16 @@ function PlayerPage() {
             setIsDisabled(false);
         }
     },[words.length]);
+
+    useEffect(() => {
+        if (playerId) {
+            repPlayer.getPlayer(playerId).then((resp) => {
+                setPlayer(resp);
+                setWords(resp.words);
+                checkEnabled();
+            });
+        }
+    }, [checkEnabled, playerId]);
 
     useEffect(() => {
         if (playerId) {
@@ -81,23 +93,31 @@ function PlayerPage() {
             {playerId && player && (
                 <>
                     <p className='PlayerText'>{player.name}</p>
-                    <label id='word'>Word: </label>
-                    <input type='text' size={20} label='word' value={word} disabled={isDisabled} onChange={(e) => {
-                        setWord(e.target.value);
-                    }}/>
-                    <button disabled={isDisabled} onClick={() => {
-                        addWord(word);
-                    }}>Add</button>
-                    <br/>
-                    <ul>
-                    {
-                        words.map((w, i) => {
-                            return <li key={i}>{w.description} <FontAwesomeIcon icon={faRemove} onClick={() => {
-                                removeWord(w.id);
-                            }} /></li>
-                        })
-                    }
-                    </ul>
+                    {!match.started ? (
+                        <>
+                            <label id='word'>Word: </label>
+                            <input type='text' size={20} label='word' value={word} disabled={isDisabled} onChange={(e) => {
+                                setWord(e.target.value);
+                            }}/>
+                            <button disabled={isDisabled} onClick={() => {
+                                addWord(word);
+                            }}>Add</button>
+                            <br/>
+                            <ul>
+                            {
+                                words.map((w, i) => {
+                                    return <li key={i}>{w.description} <FontAwesomeIcon icon={faRemove} onClick={() => {
+                                        removeWord(w.id);
+                                    }} /></li>
+                                })
+                            }
+                            </ul>
+                        </>
+                    ) : (
+                        <>
+                            Wait for your turn ...
+                        </>
+                    )}
                 </>
             )}
         </>

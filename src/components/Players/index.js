@@ -20,9 +20,7 @@ function Players() {
         socket.connect();
         socket.on('add-player', check);
           
-        return () => {
-        socket.disconnect();
-        }
+        return () => {socket.disconnect();}
         },
         []
       )
@@ -31,8 +29,16 @@ function Players() {
         setPlayers(resp.players);
     };
 
-    const shuffle = (resp) => {
-        repInfo.shuffle().then((resp) => {
+    const start = (resp) => {
+        repInfo.start().then((resp) => {
+            SetIsMatchStarted(resp.started);
+            setTeams(resp.teams);
+        });
+    };
+
+    const reset = (resp) => {
+        repInfo.reset().then((resp) => {
+            setPlayers(resp.players);
             SetIsMatchStarted(resp.started);
             setTeams(resp.teams);
         });
@@ -56,33 +62,40 @@ function Players() {
                     </div>
                     <div className="button">
                         <button onClick={() => {
-                            shuffle();
+                            start();
                         }}>Start Match</button>
                     </div>
                 </div>
             )}
 
             {isMatchStarted && (
-                <div>
-                    <div className="message">
-                        <h1>
-                            Game Started
-                        </h1>
+                <>
+                    <div>
+                        <div className="message">
+                            <h1>
+                                Game Started
+                            </h1>
+                        </div>
+                        <div className='container'>
+                            {teams.map(function(t, index){
+                                    return <div className='t' >
+                                            <p>{t.name}</p>
+                                            <p>{t.points}</p>
+                                            <ul className="players">
+                                                {t.players.map(function(p, index){
+                                                    return <li>{p.name}</li>;
+                                                })}
+                                            </ul>
+                                        </div>
+                                })}
+                        </div>
                     </div>
-                    <div className='container'>
-                        {teams.map(function(t, index){
-                                return <div className='t' >
-                                        <p>{t.name}</p>
-                                        <p>{t.points}</p>
-                                        <ul className="players">
-                                            {t.players.map(function(p, index){
-                                                return <li>{p.name}</li>;
-                                            })}
-                                        </ul>
-                                    </div>
-                            })}
+                    <div className="button">
+                        <button onClick={() => {
+                            reset();
+                        }}>End Game</button>
                     </div>
-                </div>
+                </>
             )}
         </>
     );
