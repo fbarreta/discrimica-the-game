@@ -1,12 +1,12 @@
 import React from 'react';
 import Header from '../Header';
 import Players from '../Players';
-function Main() {
+function Main({socket}) {
     return(
         <>
             <Header />
             <hr/>
-            <Players />
+            <Players socket={socket}/>
         </>
     );
 }

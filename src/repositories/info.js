@@ -8,12 +8,14 @@ function getInfo() {
 }
 
 function getStatus() {
-    return fetch(`${config.URL_API}/info`).then(async (resp) => {
-        const info = await resp.json();
-        return {
-            id: info.id,
-            started: info.started,
-        };
+    return fetch(`${config.URL_API}/status`).then(async (resp) => {
+        return await resp.json();
+    });
+}
+
+function getWord() {
+    return fetch(`${config.URL_API}/getWord`).then(async (resp) => {
+        return await resp.json();
     });
 }
 
@@ -28,6 +30,17 @@ function start() {
     });
 }
 
+function nextTurn() {
+    return fetch(`${config.URL_API}/nextTurn`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then(async (resp) => {
+        return await {};
+    });
+}
+
 function reset() {
     return fetch(`${config.URL_API}/reset`, {
         method: 'POST',
@@ -39,4 +52,4 @@ function reset() {
     });
 }
 
-export default { getInfo, start, reset, getStatus }
+export default { getInfo, start, reset, getStatus, getWord, nextTurn }

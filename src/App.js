@@ -2,10 +2,10 @@ import React from 'react';
 import './App.css';
 import Main from './components/Main';
 
-function App() {
+function App({socket}) {
   return (
     <>
-      <Main />
+      <Main socket={socket} />
     </>
   );
 }

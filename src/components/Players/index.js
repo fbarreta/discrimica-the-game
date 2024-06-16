@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import repInfo from './../../repositories/info';
-import { io } from 'socket.io-client';
 import './index.scss'
 import Player from '../Player';
-function Players() {
-    // var names = ['Felipe', 'Lidiane', 'Gabriel', 'Maria Clara', 'Rodrigo', 'Ricardo', 'Thais'];
+function Players({socket}) {
     const [players, setPlayers] = useState([]);
     const [teams, setTeams] = useState([]);
     const [isMatchStarted, SetIsMatchStarted] = useState(false);
@@ -15,19 +13,14 @@ function Players() {
             SetIsMatchStarted(resp.started);
             setTeams(resp.teams);
         });
-        const URL = 'http://localhost:3001';
-        const socket = io(URL);
-        socket.connect();
-        socket.on('add-player', check);
-          
-        return () => {socket.disconnect();}
-        },
-        []
-      )
+    },[]);
 
-    const check = (resp) => {
-        setPlayers(resp.players);
-    };
+    useEffect(() => {
+        socket.on('add-player', (resp) => {
+            setPlayers(resp.players);
+            setTeams(resp.teams);
+        });
+    }, [socket]);
 
     const start = (resp) => {
         repInfo.start().then((resp) => {
