@@ -6,11 +6,14 @@ function Players({socket}) {
     const [players, setPlayers] = useState([]);
     const [teams, setTeams] = useState([]);
     const [activeTeamIndex, setActiveTeamIndex] = useState(0);
+    const [activePlayerIndex, setActivePlayerIndex] = useState(0);
     const [isMatchStarted, SetIsMatchStarted] = useState(false);
     useEffect(
         () => {
         repInfo.getInfo().then((resp) => {
             console.log(resp);
+            setActiveTeamIndex(resp.activeTeamIndex);
+            setActivePlayerIndex(resp.teams[resp.activeTeamIndex].activePlayerIndex);
             setPlayers(resp.players);
             SetIsMatchStarted(resp.started);
             setTeams(resp.teams);
@@ -21,6 +24,8 @@ function Players({socket}) {
         socket.on('add-player', (resp) => {
             setPlayers(resp.players);
             setTeams(resp.teams);
+            setActiveTeamIndex(resp.activeTeamIndex);
+            setActivePlayerIndex(resp.teams[resp.activeTeamIndex].activePlayerIndex);
         });
     }, [socket]);
 
@@ -72,13 +77,13 @@ function Players({socket}) {
                             </h1>
                         </div>
                         <div className='container'>
-                            {teams.map(function(t, index){
-                                    return <div key={index} className='t' >
-                                            <p className={`team-text ${t.color} ${activeTeamIndex === index ? 'active' : ''}`}>{t.name}</p>
+                            {teams.map(function(t, teamIndex){
+                                    return <div key={teamIndex} className='t' >
+                                            <p className={`team-text ${t.color} ${activeTeamIndex === teamIndex ? 'active' : ''}`}>{t.name}</p>
                                             <p className='score-text'>{t.points}</p>
                                             <ul className="players">
-                                                {t.players.map(function(p, index){
-                                                    return <li key={index} className={`player-text ${t.color}`}>{p.name}</li>;
+                                                {t.players.map(function(p, playerIndex){
+                                                    return <li key={playerIndex} className={`player-text ${t.color} ${activeTeamIndex === teamIndex && activePlayerIndex === playerIndex ? 'active' : ''}`}>{p.name}</li>;
                                                 })}
                                             </ul>
                                         </div>
