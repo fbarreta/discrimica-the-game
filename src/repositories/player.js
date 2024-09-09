@@ -19,4 +19,16 @@ function getPlayer(playerID) {
     });
 }
 
-export default { addPlayer, getPlayer }
+function guessWord(playerID, wordId) {
+    return fetch(`${config.URL_API}/guessWord/${playerID}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: wordId })
+    }).then(async (resp) => {
+        return await resp.json();
+    });
+}
+
+export default { addPlayer, getPlayer, guessWord }
