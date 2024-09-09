@@ -21,3 +21,34 @@
   text-align: center;
   float: left;
 }
+
+.team-text {
+  font-size: 50px;
+  font-weight: bolder;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+}
+
+.blue {
+  color:blue;
+}
+
+.red {
+  color:red;
+}
+
+.score-text {
+  font-size: 80px;
+  font-weight: bolder;
+}
+
+.player-text {
+  font-size: 50px;
+  font-weight: bolder;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+}
+
+.active {
+  text-decoration: underline;
+}

@@ -7,10 +7,12 @@ function Players() {
     // var names = ['Felipe', 'Lidiane', 'Gabriel', 'Maria Clara', 'Rodrigo', 'Ricardo', 'Thais'];
     const [players, setPlayers] = useState([]);
     const [teams, setTeams] = useState([]);
+    const [activeTeamIndex, setActiveTeamIndex] = useState(0);
     const [isMatchStarted, SetIsMatchStarted] = useState(false);
     useEffect(
         () => {
         repInfo.getInfo().then((resp) => {
+            console.log(resp);
             setPlayers(resp.players);
             SetIsMatchStarted(resp.started);
             setTeams(resp.teams);
@@ -78,12 +80,12 @@ function Players() {
                         </div>
                         <div className='container'>
                             {teams.map(function(t, index){
-                                    return <div className='t' >
-                                            <p>{t.name}</p>
-                                            <p>{t.points}</p>
+                                    return <div key={index} className='t' >
+                                            <p className={`team-text ${t.color} ${activeTeamIndex === index ? 'active' : ''}`}>{t.name}</p>
+                                            <p className='score-text'>{t.points}</p>
                                             <ul className="players">
                                                 {t.players.map(function(p, index){
-                                                    return <li>{p.name}</li>;
+                                                    return <li key={index} className={`player-text ${t.color}`}>{p.name}</li>;
                                                 })}
                                             </ul>
                                         </div>

@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import Header from './../../components/Header';
 import repPlayer from './../../repositories/player';
-import repInfo from './../../repositories/info';
 import repWord from './../../repositories/word';
 import './index.scss'
 function PlayerPage() {
@@ -14,7 +13,7 @@ function PlayerPage() {
     const [name, setName] = useState('');
     const [word, setWord] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
-    const [match, setMatch] = useState({id: null, started: false});
+    const [match] = useState({id: null, started: false});
     const history = useHistory();
 
     const checkEnabled = useCallback(() => {
