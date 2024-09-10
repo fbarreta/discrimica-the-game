@@ -11,9 +11,10 @@ function Players({socket}) {
     useEffect(
         () => {
         repInfo.getInfo().then((resp) => {
-            console.log(resp);
-            setActiveTeamIndex(resp.activeTeamIndex);
-            setActivePlayerIndex(resp.teams[resp.activeTeamIndex].activePlayerIndex);
+            if (resp.teams.lengh > 0) {
+                setActivePlayerIndex(resp.teams[resp.activeTeamIndex].activePlayerIndex);
+                setActiveTeamIndex(resp.activeTeamIndex);
+            }
             setPlayers(resp.players);
             SetIsMatchStarted(resp.started);
             setTeams(resp.teams);
@@ -24,8 +25,10 @@ function Players({socket}) {
         socket.on('add-player', (resp) => {
             setPlayers(resp.players);
             setTeams(resp.teams);
-            setActiveTeamIndex(resp.activeTeamIndex);
-            setActivePlayerIndex(resp.teams[resp.activeTeamIndex].activePlayerIndex);
+            if (resp.teams.lengh > 0) {
+                setActiveTeamIndex(resp.activeTeamIndex);
+                setActivePlayerIndex(resp.teams[resp.activeTeamIndex].activePlayerIndex);
+            }
         });
     }, [socket]);
 

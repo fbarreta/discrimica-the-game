@@ -16,7 +16,7 @@ function PlayerPage({socket}) {
     const [wordToGuess, setWordToGuess] = useState({id: null, description: ''});
     const [isDisabled, setIsDisabled] = useState(false);
     const [match, setMatch] = useState({id: null, started: false, activePlayerId: null});
-    const [time, setTime] = useState(10);
+    const [time, setTime] = useState(60);
     const history = useHistory();
 
     useEffect(() => {
